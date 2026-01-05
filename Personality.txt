@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Rest of Zanity</title>
+    <style>
+        /* Global Styles */
+        body {
+            background-color: #000000; /* Black background */
+            color: #FFFFFF; /* White text for readability */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            border: 2px solid #FF69B4; /* Pink trim around the body */
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #111111; /* Darker black shade for header */
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #FF69B4; /* Pink trim */
+        }
+
+        header h1 {
+            color: #FFFFFF; /* White title */
+            margin: 0;
+            text-shadow: 1px 1px 2px #FF69B4; /* Pink glow effect */
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: #FF69B4; /* Pink headings */
+            border-bottom: 1px solid #FFFFFF; /* White trim under headings */
+            padding-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #1A1A1A; /* Slightly lighter black for list items */
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid #FF69B4; /* Pink border trim */
+            border-radius: 5px;
+        }
+
+        a {
+            color: #FF69B4; /* Pink links */
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #FFFFFF; /* White on hover */
+        }
+
+        /* Admin Section Styles */
+        #admin-button {
+            background-color: #FF69B4; /* Pink button */
+            color: #000000; /* Black text */
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        #admin-panel {
+            display: none; /* Hidden by default */
+            background-color: #111111; /* Dark background */
+            padding: 20px;
+            border: 2px solid #FF69B4; /* Pink trim */
+            border-radius: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            border: 1px solid #FF69B4;
+            padding: 10px;
+            margin: 5px 0;
+            width: calc(100% - 22px); /* Adjust for padding/border */
+        }
+
+        button {
+            background-color: #FF69B4;
+            color: #000000;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #FFFFFF; /* White on hover */
+            color: #000000;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #111111;
+            padding: 10px;
+            text-align: center;
+            border-top: 2px solid #FF69B4; /* Pink trim */
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>The Rest of Zanity</h1>
+        <p>A community server featuring various content creators. Join us for discussions, streams, and more!</p>
+    </header>
+
+    <main>
+        <section id="creators">
+            <h2>Featured Content Creators</h2>
+            <ul id="creator-links">
+                <!-- Default links; can be added/removed via admin -->
+                <li><a href="https://example.com/creator1" target="_blank">Creator 1 - Gaming Streams</a> <button class="remove-link" style="display:none;">Remove</button></li>
+                <li><a href="https://example.com/creator2" target="_blank">Creator 2 - Art Tutorials</a> <button class="remove-link" style="display:none;">Remove</button></li>
+                <li><a href="https://example.com/creator3" target="_blank">Creator 3 - Tech Reviews</a> <button class="remove-link" style="display:none;">Remove</button></li>
+            </ul>
+        </section>
+
+        <button id="admin-button">Admin Access</button>
+
+        <section id="admin-panel">
+            <h2>Admin Configuration</h2>
+            <p>Configure the site by adding or removing creator links.</p>
+            <input type="text" id="new-link-name" placeholder="Link Name (e.g., Creator Name - Description)">
+            <input type="text" id="new-link-url" placeholder="Link URL (e.g., https://example.com)">
+            <button id="add-link">Add Link</button>
+            <button id="logout-admin">Logout</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 The Rest of Zanity. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Simple admin password (for demo purposes; in real scenarios, use secure backend authentication)
+        const ADMIN_PASSWORD = "zanityadmin123"; // Change this to a secure password
+
+        // Load saved links from localStorage
+        function loadLinks() {
+            const links = JSON.parse(localStorage.getItem('creatorLinks')) || [
+                { name: 'Creator 1 - Gaming Streams', url: 'https://example.com/creator1' },
+                { name: 'Creator 2 - Art Tutorials', url: 'https://example.com/creator2' },
+                { name: 'Creator 3 - Tech Reviews', url: 'https://example.com/creator3' }
+            ];
+            const ul = document.getElementById('creator-links');
+            ul.innerHTML = '';
+            links.forEach(link => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a> <button class="remove-link" style="display:none;">Remove</button>`;
+                ul.appendChild(li);
+            });
+        }
+
+        // Save links to localStorage
+        function saveLinks() {
+            const links = [];
+            document.querySelectorAll('#creator-links li').forEach(li => {
+                const a = li.querySelector('a');
+                links.push({ name: a.textContent, url: a.href });
+            });
+            localStorage.setItem('creatorLinks', JSON.stringify(links));
+        }
+
+        // Admin access
+        document.getElementById('admin-button').addEventListener('click', () => {
+            const password = prompt('Enter admin password:');
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('admin-panel').style.display = 'block';
+                document.querySelectorAll('.remove-link').forEach(btn => btn.style.display = 'inline');
+                document.getElementById('admin-button').style.display = 'none';
+            } else {
+                alert('Incorrect password!');
+            }
+        });
+
+        // Add link
+        document.getElementById('add-link').addEventListener('click', () => {
+            const name = document.getElementById('new-link-name').value;
+            const url = document.getElementById('new-link-url').value;
+            if (name && url) {
+                const ul = document.getElementById('creator-links');
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="${url}" target="_blank">${name}</a> <button class="remove-link">Remove</button>`;
+                ul.appendChild(li);
+                saveLinks();
+                document.getElementById('new-link-name').value = '';
+                document.getElementById('new-link-url').value = '';
+            } else {
+                alert('Please enter both name and URL.');
+            }
+        });
+
+        // Remove link (event delegation)
+        document.getElementById('creator-links').addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-link')) {
+                e.target.parentElement.remove();
+                saveLinks();
+            }
+        });
+
+        // Logout
+        document.getElementById('logout-admin').addEventListener('click', () => {
+            document.getElementById('admin-panel').style.display = 'none';
+            document.querySelectorAll('.remove-link').forEach(btn => btn.style.display = 'none');
+            document.getElementById('admin-button').style.display = 'block';
+        });
+
+        // Initial load
+        loadLinks();
+    </script>
+</body>
+</html>
