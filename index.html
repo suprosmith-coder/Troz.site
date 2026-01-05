@@ -3,255 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Rest of Zanity // NEURAL INTERFACE</title>
+    <title>YouTube Hub // The Rest of Zanity</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --cyan-trim: #00fff2;
+            --purple-glow: #7000ff;
+            --panel-bg: rgba(10, 10, 10, 0.9);
+            --border-color: rgba(0, 255, 242, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #00ffcc;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 204, 0.05) 2px, rgba(0, 255, 204, 0.05) 4px),
+                        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 204, 0.05) 2px, rgba(0, 255, 204, 0.05) 4px);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 204, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
+            animation: scan 4s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes scan {
+            0% { top: -2px; }
+            100% { top: 100%; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            border: 2px solid var(--cyan-trim);
+            border-radius: 15px;
+            background: var(--panel-bg);
+            box-shadow: 0 0 40px rgba(0, 255, 242, 0.4);
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: var(--cyan-trim);
+            text-shadow: 0 0 20px var(--cyan-trim);
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            animation: glitch 5s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% {
+                text-shadow: 0 0 20px var(--cyan-trim);
+            }
+            92% {
+                text-shadow: -3px 0 var(--cyan-trim), 3px 3px var(--purple-glow);
+                transform: skew(0.5deg);
+            }
+            94% {
+                text-shadow: 3px 0 var(--purple-glow), -3px -3px var(--cyan-trim);
+                transform: skew(-0.5deg);
+            }
+        }
+
+        .header p {
+            color: var(--purple-glow);
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: var(--purple-glow);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .back-btn:hover {
+            background: var(--cyan-trim);
+            box-shadow: 0 0 25px var(--cyan-trim);
+            transform: translateY(-3px);
+        }
+
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .channel-card {
+            background: var(--panel-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .channel-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(112, 0, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .channel-card:hover::before {
+            left: 100%;
+        }
+
+        .channel-card:hover {
+            border-color: var(--cyan-trim);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 255, 242, 0.4);
+        }
+
+        .channel-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .channel-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--purple-glow), var(--cyan-trim));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #000;
+            flex-shrink: 0;
+        }
+
+        .channel-info h3 {
+            color: var(--cyan-trim);
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+
+        .channel-id {
+            color: var(--purple-glow);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .channel-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: transparent;
+            border: 2px solid var(--purple-glow);
+            border-radius: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .channel-link:hover {
+            background: var(--purple-glow);
+            color: #000;
+            box-shadow: 0 0 25px var(--purple-glow);
+            transform: scale(1.05);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 2px solid var(--border-color);
+            color: var(--cyan-trim);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .channels-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Animated background elements -->
     <div class="cyber-grid"></div>
     <div class="scan-line"></div>
 
-    <div class="ui-frame">
-        <!-- Top Navigation Bar -->
-        <nav class="top-nav">
-            <div class="nav-item active" data-section="home">
-                <i class="fas fa-home"></i>
-                <span>HOME</span>
+    <div class="container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> BACK TO HOME
+        </a>
+
+        <div class="header">
+            <h1><i class="fab fa-youtube"></i> YOUTUBE HUB</h1>
+            <p>COMMUNITY CREATORS // NEURAL NETWORK</p>
+        </div>
+
+        <div class="channels-grid">
+            <div class="channel-card">
+                <div class="channel-header">
+                    <div class="channel-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="channel-info">
+                        <h3>GAUGE GAMING</h3>
+                        <div class="channel-id">@Guage</div>
+                    </div>
+                </div>
+                <a href="https://youtube.com/@gauge_gaming?si=lBDdcU0Abyj1q6bx" target="_blank" class="channel-link">
+                    <i class="fas fa-play-circle"></i> VISIT CHANNEL
+                </a>
             </div>
-            <div class="nav-item" data-section="content">
-                <i class="fas fa-video"></i>
-                <span>CONTENT</span>
+
+            <div class="channel-card">
+                <div class="channel-header">
+                    <div class="channel-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="channel-info">
+                        <h3>XIRIUZ750</h3>
+                        <div class="channel-id">@Xiriuz</div>
+                    </div>
+                </div>
+                <a href="https://youtube.com/@xiriuz750?si=7yVQxSE-xrgAtH29" target="_blank" class="channel-link">
+                    <i class="fas fa-play-circle"></i> VISIT CHANNEL
+                </a>
             </div>
-            <div class="nav-item" data-section="community">
-                <i class="fas fa-users"></i>
-                <span>COMMUNITY</span>
+
+            <div class="channel-card">
+                <div class="channel-header">
+                    <div class="channel-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="channel-info">
+                        <h3>DINOTHUGG</h3>
+                        <div class="channel-id">@DinoThugg</div>
+                    </div>
+                </div>
+                <a href="https://youtube.com/@dinothugg?si=lIhOau1NjMvZPkAb" target="_blank" class="channel-link">
+                    <i class="fas fa-play-circle"></i> VISIT CHANNEL
+                </a>
             </div>
-            <div class="nav-item" data-section="about">
-                <i class="fas fa-info-circle"></i>
-                <span>ABOUT</span>
+
+            <div class="channel-card">
+                <div class="channel-header">
+                    <div class="channel-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="channel-info">
+                        <h3>BLUEEY36</h3>
+                        <div class="channel-id">@Blueey</div>
+                    </div>
+                </div>
+                <a href="https://youtube.com/@blueey36?si=CsQUm2GKb8lzEcbm" target="_blank" class="channel-link">
+                    <i class="fas fa-play-circle"></i> VISIT CHANNEL
+                </a>
             </div>
-            <div class="nav-item" data-section="shop">
-                <i class="fas fa-shopping-cart"></i>
-                <span>SHOP</span>
+
+            <div class="channel-card">
+                <div class="channel-header">
+                    <div class="channel-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="channel-info">
+                        <h3>MALLYALIEN OFFICIAL</h3>
+                        <div class="channel-id">@MallyTheAlien</div>
+                    </div>
+                </div>
+                <a href="https://youtube.com/@mallyalien_offical?si=4F2o2FkdXZGsSSV0" target="_blank" class="channel-link">
+                    <i class="fas fa-play-circle"></i> VISIT CHANNEL
+                </a>
             </div>
-        </nav>
 
-        <!-- Main Header -->
-        <header class="ui-header">
-            <div class="logo">
-                <i class="fas fa-microchip"></i> The Rest of Zanity_UI // V2.0
+            <div class="channel-card">
+                <div class="channel-header">
+                    <div class="channel-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="channel-info">
+                        <h3>LORD MATHIAS</h3>
+                        <div class="channel-id">Community Leader</div>
+                    </div>
+                </div>
+                <a href="https://youtube.com/@1lordmathias?si=bHgwYCA0oV-XaM_L" target="_blank" class="channel-link">
+                    <i class="fas fa-play-circle"></i> VISIT CHANNEL
+                </a>
             </div>
-            <div class="header-center">
-                <div class="system-status">
-                    <span class="status-label">SYSTEM STATUS:</span>
-                    <span class="status-value">OPERATIONAL</span>
-                </div>
-            </div>
-            <div class="header-stats">
-                <div class="stat-box">
-                    <i class="fas fa-users"></i>
-                    <div>
-                        <span class="stat-label">SUBS</span>
-                        <span class="stat-value" id="sub-header">0</span>
-                    </div>
-                </div>
-                <div class="stat-box">
-                    <i class="fas fa-eye"></i>
-                    <div>
-                        <span class="stat-label">VIEWS</span>
-                        <span class="stat-value" id="view-count">0</span>
-                    </div>
-                </div>
-                <div class="stat-box">
-                    <i class="fas fa-signal"></i>
-                    <div>
-                        <span class="stat-label">PING</span>
-                        <span class="stat-value">27ms</span>
-                    </div>
-                </div>
-            </div>
-        </header>
+        </div>
 
-        <!-- Main Content Area -->
-        <div class="dashboard-wrapper">
-            <!-- Left Sidebar -->
-            <aside class="panel side-panel left-panel">
-                <!-- Quick Links -->
-                <div class="panel-header">
-                    <i class="fas fa-bolt"></i> QUICK ACCESS
-                </div>
-                <div class="panel-body">
-                    <a href="https://youtube.com/@therestofzanity" target="_blank" class="ui-button">
-                        <i class="fab fa-youtube"></i> YouTube Channel
-                    </a>
-                    <a href="https://www.tiktok.com/@therestofzanity" target="_blank" class="ui-button">
-                        <i class="fab fa-tiktok"></i> TikTok Hub
-                    </a>
-                    <a href="https://discord.gg/therestofzanity" target="_blank" class="ui-button">
-                        <i class="fab fa-discord"></i> Discord Server
-                    </a>
-                    <a href="https://twitter.com/therestofzanity" target="_blank" class="ui-button">
-                        <i class="fab fa-twitter"></i> Twitter/X
-                    </a>
-                    <a href="https://twitch.tv/therestofzanity" target="_blank" class="ui-button">
-                        <i class="fab fa-twitch"></i> Twitch
-                    </a>
-                    <a href="https://instagram.com/therestofzanity" target="_blank" class="ui-button">
-                        <i class="fab fa-instagram"></i> Instagram
-                    </a>
-                </div>
-
-                <!-- Live Stats -->
-                <div class="panel-header mt">
-                    <i class="fas fa-chart-line"></i> LIVE ANALYTICS
-                </div>
-                <div class="panel-body">
-                    <div class="stat-row">
-                        <p class="stat-label">SUBSCRIBERS</p>
-                        <div class="progress-container">
-                            <div class="progress-fill" id="sub-bar" style="width: 0%;"></div>
-                        </div>
-                        <p class="stat-value" id="sub-count">0</p>
-                    </div>
-                    
-                    <div class="stat-row">
-                        <p class="stat-label">ENGAGEMENT RATE</p>
-                        <div class="progress-container">
-                            <div class="progress-fill" id="engage-bar" style="width: 0%;"></div>
-                        </div>
-                        <p class="stat-value" id="engage-count">0%</p>
-                    </div>
-
-                    <div class="stat-row">
-                        <p class="stat-label">GROWTH</p>
-                        <div class="progress-container">
-                            <div class="progress-fill" id="growth-bar" style="width: 0%;"></div>
-                        </div>
-                        <p class="stat-value" id="growth-count">+0%</p>
-                    </div>
-                </div>
-
-                <!-- Server Status -->
-                <div class="panel-header mt">
-                    <i class="fas fa-server"></i> SERVER STATUS
-                </div>
-                <div class="panel-body">
-                    <div class="server-info">
-                        <div class="server-row">
-                            <span>Discord Server</span>
-                            <span class="status-online"><i class="fas fa-circle"></i> ONLINE</span>
-                        </div>
-                        <div class="server-row">
-                            <span>API Status</span>
-                            <span class="status-online"><i class="fas fa-circle"></i> ACTIVE</span>
-                        </div>
-                        <div class="server-row">
-                            <span>Stream Status</span>
-                            <span class="status-offline"><i class="fas fa-circle"></i> OFFLINE</span>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Center Panel -->
-            <main class="panel center-panel">
-                <!-- Profile Section -->
-                <div class="profile-section">
-                    <div class="target-corners">
-                        <div class="profile-hex">
-                            <img src="https://via.placeholder.com/150" alt="Avatar">
-                        </div>
-                    </div>
-                    <h1 class="glitch-text">The Rest of Zanity</h1>
-                    <p class="profile-tagline">CONTENT CREATOR // GAMER // STREAMER</p>
-                    <div class="status-indicator">
-                        <span class="pulse-dot"></span> NEURAL INTERFACE ACTIVE
-                    </div>
-                </div>
-
-                <!-- Feature Cards -->
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <h3>LATEST VIDEO</h3>
-                        <p>Epic Gaming Montage #47</p>
-                        <button class="feature-btn">WATCH NOW</button>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <h3>NEXT STREAM</h3>
-                        <p>Live Gaming Session</p>
-                        <button class="feature-btn">SET REMINDER</button>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <h3>TOURNAMENTS</h3>
-                        <p>Join Community Events</p>
-                        <button class="feature-btn">REGISTER</button>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-gift"></i>
-                        </div>
-                        <h3>MERCH STORE</h3>
-                        <p>Exclusive Gear Available</p>
-                        <button class="feature-btn">SHOP NOW</button>
-                    </div>
-                </div>
-
-                <!-- Info Panels -->
-                <div class="info-panels">
-                    <div class="info-card">
-                        <h3><i class="fas fa-bell"></i> ANNOUNCEMENTS</h3>
-                        <div class="announcement-item">
-                            <span class="announcement-badge">NEW</span>
-                            <p>New video series launching next week!</p>
-                        </div>
-                        <div class="announcement-item">
-                            <span class="announcement-badge">UPDATE</span>
-                            <p>Discord server now has 10K+ members!</p>
-                        </div>
-                    </div>
-
-                    <div class="info-card">
-                        <h3><i class="fas fa-clock"></i> STREAM SCHEDULE</h3>
-                        <div class="schedule-item">
-                            <span class="day">MON</span>
-                            <span class="time">8:00 PM EST</span>
-                        </div>
-                        <div class="schedule-item">
-                            <span class="day">WED</span>
-                            <span class="time">8:00 PM EST</span>
-                        </div>
-                        <div class="schedule-item">
-                            <span class="day">FRI</span>
-                            <span class="time">9:00 PM EST</span>
-                        </div>
-                    </div>
-                </div>
-            </main>
-
-            <!-- Right Sidebar -->
-            <aside class="panel side-panel right-panel">
-                <!-- Recent Uploads -->
-                <div class="panel-header">
-                    <i class="fas fa-video"></i> RECENT UPLOADS
-                </div>
-                <div class="panel-body scrollable" id="video-list">
-                    <div class="loading-text">Fetching data...</div>
-                </div>
-
-                <!-- Top Supporters -->
+        <div class="footer">
+            <p><i class="fas fa-shield-alt"></i> COMMUNITY NETWORK ACTIVE // © 2026 THE REST OF ZANITY</p>
+        </div>
+    </div>
+</body>
+</html>!-- Top Supporters -->
                 <div class="panel-header mt">
                     <i class="fas fa-star"></i> TOP SUPPORTERS
                 </div>
@@ -366,6 +463,8 @@
     </div>
 
     <script src="script.js"></script>
+</body>
+</html>/script>
 </body>
 </html>                      <div class="announcement-item">
                             <span class="announcement-badge">EVENT</span>

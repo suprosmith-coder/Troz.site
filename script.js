@@ -1,8 +1,8 @@
 // script.js - JavaScript for dynamic elements in The Rest of Zanity website
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Mock data for stats (replace with real API calls if needed)
-    const mockData = {
+    // Mock data for main page stats (replace with real API calls if needed)
+    const mainStats = {
         subscribers: 12345,
         views: 678901,
         engagement: 85,
@@ -16,35 +16,109 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
     };
 
-    // Update header stats
-    document.getElementById('sub-header').innerText = mockData.subscribers.toLocaleString();
-    document.getElementById('view-count').innerText = mockData.views.toLocaleString();
+    // Data for YouTube Hub channels
+    const channels = [
+        {
+            name: 'Gauge Gaming',
+            subs: '187 subscribers',
+            pfp: 'https://via.placeholder.com/100',
+            link: 'https://youtube.com/@gauge_gaming'
+        },
+        {
+            name: 'Xiriuz',
+            subs: 'N/A subscribers',
+            pfp: 'https://via.placeholder.com/100',
+            link: 'https://youtube.com/@xiriuz750'
+        },
+        {
+            name: 'DinoThugg',
+            subs: '1.33K subscribers',
+            pfp: 'https://via.placeholder.com/100',
+            link: 'https://youtube.com/@dinothugg'
+        },
+        {
+            name: 'BLUEEY',
+            subs: 'N/A subscribers',
+            pfp: 'https://via.placeholder.com/100',
+            link: 'https://youtube.com/@blueey36'
+        },
+        {
+            name: 'Mallyalien',
+            subs: '339 subscribers',
+            pfp: 'https://via.placeholder.com/100',
+            link: 'https://youtube.com/@mallyalien_offical'
+        },
+        {
+            name: 'LORD MATHIAS',
+            subs: '652 subscribers',
+            pfp: 'https://via.placeholder.com/100',
+            link: 'https://youtube.com/@1lordmathias'
+        }
+    ];
 
-    // Update live analytics
-    document.getElementById('sub-count').innerText = mockData.subscribers.toLocaleString();
-    document.getElementById('engage-count').innerText = `${mockData.engagement}%`;
-    document.getElementById('growth-count').innerText = `+${mockData.growth}%`;
+    // Update main page stats if elements exist
+    const subHeader = document.getElementById('sub-header');
+    if (subHeader) subHeader.innerText = mainStats.subscribers.toLocaleString();
 
-    // Animate progress bars
-    document.getElementById('sub-bar').style.width = `${Math.min(mockData.subscribers / 100000 * 100, 100)}%`;
-    document.getElementById('engage-bar').style.width = `${mockData.engagement}%`;
-    document.getElementById('growth-bar').style.width = `${mockData.growth * 5}%`; // Scaled for visibility
+    const viewCount = document.getElementById('view-count');
+    if (viewCount) viewCount.innerText = mainStats.views.toLocaleString();
 
-    // Update Discord stats
-    document.getElementById('discord-members').innerText = mockData.discordMembers.toLocaleString();
-    document.getElementById('discord-online').innerText = mockData.discordOnline.toLocaleString();
+    const subCount = document.getElementById('sub-count');
+    if (subCount) subCount.innerText = mainStats.subscribers.toLocaleString();
 
-    // Populate recent uploads
+    const engageCount = document.getElementById('engage-count');
+    if (engageCount) engageCount.innerText = `${mainStats.engagement}%`;
+
+    const growthCount = document.getElementById('growth-count');
+    if (growthCount) growthCount.innerText = `+${mainStats.growth}%`;
+
+    // Animate progress bars if elements exist
+    const subBar = document.getElementById('sub-bar');
+    if (subBar) subBar.style.width = `${Math.min(mainStats.subscribers / 100000 * 100, 100)}%`;
+
+    const engageBar = document.getElementById('engage-bar');
+    if (engageBar) engageBar.style.width = `${mainStats.engagement}%`;
+
+    const growthBar = document.getElementById('growth-bar');
+    if (growthBar) growthBar.style.width = `${mainStats.growth * 5}%`; // Scaled for visibility
+
+    // Update Discord stats if elements exist
+    const discordMembers = document.getElementById('discord-members');
+    if (discordMembers) discordMembers.innerText = mainStats.discordMembers.toLocaleString();
+
+    const discordOnline = document.getElementById('discord-online');
+    if (discordOnline) discordOnline.innerText = mainStats.discordOnline.toLocaleString();
+
+    // Populate recent uploads if element exists
     const videoList = document.getElementById('video-list');
-    videoList.innerHTML = ''; // Clear loading text
-    mockData.recentVideos.forEach(video => {
-        const videoItem = document.createElement('div');
-        videoItem.classList.add('video-item');
-        videoItem.innerHTML = `
-            <a href="\( {video.link}" target="_blank"> \){video.title}</a>
-        `;
-        videoList.appendChild(videoItem);
-    });
+    if (videoList) {
+        videoList.innerHTML = ''; // Clear loading text
+        mainStats.recentVideos.forEach(video => {
+            const videoItem = document.createElement('div');
+            videoItem.classList.add('video-item');
+            videoItem.innerHTML = `
+                <a href="\( {video.link}" target="_blank"> \){video.title}</a>
+            `;
+            videoList.appendChild(videoItem);
+        });
+    }
+
+    // If on YouTube Hub page, update channel cards dynamically
+    const featureGrid = document.querySelector('.feature-grid');
+    if (featureGrid && document.title.includes('YouTube Hub')) {
+        featureGrid.innerHTML = ''; // Clear existing cards
+        channels.forEach(channel => {
+            const card = document.createElement('div');
+            card.classList.add('feature-card');
+            card.innerHTML = `
+                <img src="\( {channel.pfp}" alt=" \){channel.name} PFP" class="feature-icon">
+                <h3>${channel.name}</h3>
+                <p>${channel.subs}</p>
+                <a href="${channel.link}" target="_blank" class="feature-btn">Visit Channel</a>
+            `;
+            featureGrid.appendChild(card);
+        });
+    }
 
     // Navigation functionality (mock, as sections aren't implemented)
     const navItems = document.querySelectorAll('.nav-item');
@@ -55,87 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add logic to switch sections if needed
         });
     });
-});rySelectorAll('.admin-tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
-        
-        this.classList.add('active');
-        const tabName = this.getAttribute('data-tab');
-        document.getElementById(tabName + '-tab').classList.add('active');
-    });
 });
-
-// Add Link
-document.getElementById('add-link-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const title = document.getElementById('link-title').value;
-    const url = document.getElementById('link-url').value;
-    const icon = document.getElementById('link-icon').value;
-
-    const newLink = {
-        id: Date.now(),
-        title: title,
-        url: url,
-        icon: icon
-    };
-
-    adminData.links.push(newLink);
-    document.getElementById('add-link-form').reset();
-    loadAdminData();
-    updateQuickLinks();
-    showSuccessMessage('Link added successfully!');
-});
-
-// Add Announcement
-document.getElementById('add-announcement-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const badge = document.getElementById('announcement-badge').value;
-    const text = document.getElementById('announcement-text').value;
-
-    const newAnnouncement = {
-        id: Date.now(),
-        badge: badge,
-        text: text
-    };
-
-    adminData.announcements.unshift(newAnnouncement);
-    document.getElementById('add-announcement-form').reset();
-    loadAdminData();
-    updateAnnouncements();
-    showSuccessMessage('Announcement posted!');
-});
-
-// Add Event
-document.getElementById('add-event-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const day = document.getElementById('event-day').value;
-    const name = document.getElementById('event-name').value;
-
-    const newEvent = {
-        id: Date.now(),
-        day: day,
-        name: name
-    };
-
-    adminData.events.push(newEvent);
-    document.getElementById('add-event-form').reset();
-    loadAdminData();
-    updateSchedule();
-    showSuccessMessage('Event added!');
-});
-
-// Load Admin Data
-function loadAdminData() {
-    // Load Links
-    const linksList = document.getElementById('links-list');
-    linksList.innerHTML = adminData.links.map(link => `
-        <div class="admin-item">
-            <div class="admin-item-info">
-                <div class="admin-item-title"><i class="${link.icon}"></i> ${link.title}</div>
-                <div class="admin-item-detail">${link.url}</div>
-            </div>
-            <div class="admin-item-actions">
                 <button class="admin-delete-btn" onclick="deleteLink(${link.id})">
                     <i class="fas fa-trash"></i> DELETE
                 </button>
