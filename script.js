@@ -1,353 +1,437 @@
-// script.js - JavaScript for dynamic elements in The Rest of Zanity website
+// script.js - The Rest of Zanity Website
 
+// ======================
+// Global Variables
+// ======================
+let currentSection = 'home';
+let isAdminLoggedIn = false;
+
+// ======================
+// Initialize on DOM Load
+// ======================
 document.addEventListener('DOMContentLoaded', function() {
-    // Mock data for main page stats (replace with real API calls if needed)
-    const mainStats = {
-        subscribers: 12345,
-        views: 678901,
-        engagement: 85,
-        growth: 12,
-        discordMembers: 10234,
-        discordOnline: 1456,
-        recentVideos: [
-            { title: 'Video 1: Epic Win', link: '#' },
-            { title: 'Video 2: Fail Compilation', link: '#' },
-            { title: 'Video 3: Stream Highlights', link: '#' }
-        ]
-    };
+    initializeNavigation();
+    initializeStats();
+    initializeModals();
+    loadVideoList();
+    loadDiscordStats();
+    animateProgressBars();
+    initializeFeatureButtons();
+});
 
-    // Data for YouTube Hub channels
-    const channels = [
-        {
-            name: 'Gauge Gaming',
-            subs: '187 subscribers',
-            pfp: 'https://via.placeholder.com/100',
-            link: 'https://youtube.com/@gauge_gaming'
-        },
-        {
-            name: 'Xiriuz',
-            subs: 'N/A subscribers',
-            pfp: 'https://via.placeholder.com/100',
-            link: 'https://youtube.com/@xiriuz750'
-        },
-        {
-            name: 'DinoThugg',
-            subs: '1.33K subscribers',
-            pfp: 'https://via.placeholder.com/100',
-            link: 'https://youtube.com/@dinothugg'
-        },
-        {
-            name: 'BLUEEY',
-            subs: 'N/A subscribers',
-            pfp: 'https://via.placeholder.com/100',
-            link: 'https://youtube.com/@blueey36'
-        },
-        {
-            name: 'Mallyalien',
-            subs: '339 subscribers',
-            pfp: 'https://via.placeholder.com/100',
-            link: 'https://youtube.com/@mallyalien_offical'
-        },
-        {
-            name: 'LORD MATHIAS',
-            subs: '652 subscribers',
-            pfp: 'https://via.placeholder.com/100',
-            link: 'https://youtube.com/@1lordmathias'
-        }
-    ];
-
-    // Update main page stats if elements exist
-    const subHeader = document.getElementById('sub-header');
-    if (subHeader) subHeader.innerText = mainStats.subscribers.toLocaleString();
-
-    const viewCount = document.getElementById('view-count');
-    if (viewCount) viewCount.innerText = mainStats.views.toLocaleString();
-
-    const subCount = document.getElementById('sub-count');
-    if (subCount) subCount.innerText = mainStats.subscribers.toLocaleString();
-
-    const engageCount = document.getElementById('engage-count');
-    if (engageCount) engageCount.innerText = `${mainStats.engagement}%`;
-
-    const growthCount = document.getElementById('growth-count');
-    if (growthCount) growthCount.innerText = `+${mainStats.growth}%`;
-
-    // Animate progress bars if elements exist
-    const subBar = document.getElementById('sub-bar');
-    if (subBar) subBar.style.width = `${Math.min(mainStats.subscribers / 100000 * 100, 100)}%`;
-
-    const engageBar = document.getElementById('engage-bar');
-    if (engageBar) engageBar.style.width = `${mainStats.engagement}%`;
-
-    const growthBar = document.getElementById('growth-bar');
-    if (growthBar) growthBar.style.width = `${mainStats.growth * 5}%`; // Scaled for visibility
-
-    // Update Discord stats if elements exist
-    const discordMembers = document.getElementById('discord-members');
-    if (discordMembers) discordMembers.innerText = mainStats.discordMembers.toLocaleString();
-
-    const discordOnline = document.getElementById('discord-online');
-    if (discordOnline) discordOnline.innerText = mainStats.discordOnline.toLocaleString();
-
-    // Populate recent uploads if element exists
-    const videoList = document.getElementById('video-list');
-    if (videoList) {
-        videoList.innerHTML = ''; // Clear loading text
-        mainStats.recentVideos.forEach(video => {
-            const videoItem = document.createElement('div');
-            videoItem.classList.add('video-item');
-            videoItem.innerHTML = `
-                <a href="\( {video.link}" target="_blank"> \){video.title}</a>
-            `;
-            videoList.appendChild(videoItem);
-        });
-    }
-
-    // If on YouTube Hub page, update channel cards dynamically
-    const featureGrid = document.querySelector('.feature-grid');
-    if (featureGrid && document.title.includes('YouTube Hub')) {
-        featureGrid.innerHTML = ''; // Clear existing cards
-        channels.forEach(channel => {
-            const card = document.createElement('div');
-            card.classList.add('feature-card');
-            card.innerHTML = `
-                <img src="\( {channel.pfp}" alt=" \){channel.name} PFP" class="feature-icon">
-                <h3>${channel.name}</h3>
-                <p>${channel.subs}</p>
-                <a href="${channel.link}" target="_blank" class="feature-btn">Visit Channel</a>
-            `;
-            featureGrid.appendChild(card);
-        });
-    }
-
-    // Navigation functionality (mock, as sections aren't implemented)
+// ======================
+// Navigation System
+// ======================
+function initializeNavigation() {
     const navItems = document.querySelectorAll('.nav-item');
+    
     navItems.forEach(item => {
         item.addEventListener('click', function() {
+            // Remove active class from all items
             navItems.forEach(nav => nav.classList.remove('active'));
+            
+            // Add active class to clicked item
             this.classList.add('active');
-            // Add logic to switch sections if needed
+            
+            // Get section name
+            const section = this.getAttribute('data-section');
+            currentSection = section;
+            
+            // Handle section changes
+            handleSectionChange(section);
         });
     });
-});
-                <button class="admin-delete-btn" onclick="deleteLink(${link.id})">
-                    <i class="fas fa-trash"></i> DELETE
-                </button>
-            </div>
-        </div>
-    `).join('');
-
-    // Load Announcements
-    const announcementsList = document.getElementById('announcements-list');
-    announcementsList.innerHTML = adminData.announcements.map(ann => `
-        <div class="admin-item">
-            <div class="admin-item-info">
-                <div class="admin-item-title">
-                    <span style="background: var(--purple-glow); color: #000; padding: 3px 8px; border-radius: 3px; font-size: 0.8rem; margin-right: 10px;">
-                        ${ann.badge}
-                    </span>
-                    ${ann.text}
-                </div>
-            </div>
-            <div class="admin-item-actions">
-                <button class="admin-delete-btn" onclick="deleteAnnouncement(${ann.id})">
-                    <i class="fas fa-trash"></i> DELETE
-                </button>
-            </div>
-        </div>
-    `).join('');
-
-    // Load Events
-    const eventsList = document.getElementById('events-list');
-    eventsList.innerHTML = adminData.events.map(event => `
-        <div class="admin-item">
-            <div class="admin-item-info">
-                <div class="admin-item-title">
-                    <span style="color: var(--purple-glow); font-weight: bold; margin-right: 10px;">${event.day}</span>
-                    ${event.name}
-                </div>
-            </div>
-            <div class="admin-item-actions">
-                <button class="admin-delete-btn" onclick="deleteEvent(${event.id})">
-                    <i class="fas fa-trash"></i> DELETE
-                </button>
-            </div>
-        </div>
-    `).join('');
 }
 
-// Delete Functions
-function deleteLink(id) {
-    if (confirm('Delete this link?')) {
-        adminData.links = adminData.links.filter(link => link.id !== id);
-        loadAdminData();
-        updateQuickLinks();
+function handleSectionChange(section) {
+    console.log(`Navigating to: ${section}`);
+    
+    // You can add custom logic for each section here
+    switch(section) {
+        case 'home':
+            // Home section logic
+            break;
+        case 'content':
+            // Content section logic
+            loadVideoList();
+            break;
+        case 'community':
+            // Community section logic
+            loadDiscordStats();
+            break;
+        case 'about':
+            // About section logic
+            break;
+        case 'shop':
+            // Shop section logic
+            break;
     }
 }
 
-function deleteAnnouncement(id) {
-    if (confirm('Delete this announcement?')) {
-        adminData.announcements = adminData.announcements.filter(ann => ann.id !== id);
-        loadAdminData();
-        updateAnnouncements();
+// ======================
+// Stats & Analytics
+// ======================
+function initializeStats() {
+    // Simulate loading stats
+    setTimeout(() => {
+        updateSubscriberCount(12345);
+        updateViewCount(1234567);
+        updateEngagementRate(8.5);
+        updateGrowthRate(12.3);
+    }, 500);
+}
+
+function updateSubscriberCount(count) {
+    const subHeader = document.getElementById('sub-header');
+    const subCount = document.getElementById('sub-count');
+    const subBar = document.getElementById('sub-bar');
+    
+    if (subHeader) animateCounter(subHeader, count);
+    if (subCount) animateCounter(subCount, count);
+    if (subBar) {
+        // Animate progress bar (example: 60% of 20k goal)
+        const percentage = (count / 20000) * 100;
+        subBar.style.width = Math.min(percentage, 100) + '%';
     }
 }
 
-function deleteEvent(id) {
-    if (confirm('Delete this event?')) {
-        adminData.events = adminData.events.filter(event => event.id !== id);
-        loadAdminData();
-        updateSchedule();
+function updateViewCount(count) {
+    const viewCount = document.getElementById('view-count');
+    if (viewCount) animateCounter(viewCount, count);
+}
+
+function updateEngagementRate(rate) {
+    const engageCount = document.getElementById('engage-count');
+    const engageBar = document.getElementById('engage-bar');
+    
+    if (engageCount) engageCount.textContent = rate.toFixed(1) + '%';
+    if (engageBar) engageBar.style.width = (rate * 10) + '%';
+}
+
+function updateGrowthRate(rate) {
+    const growthCount = document.getElementById('growth-count');
+    const growthBar = document.getElementById('growth-bar');
+    
+    if (growthCount) growthCount.textContent = '+' + rate.toFixed(1) + '%';
+    if (growthBar) growthBar.style.width = (rate * 5) + '%';
+}
+
+function animateCounter(element, target) {
+    let current = 0;
+    const increment = target / 50;
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        element.textContent = formatNumber(Math.floor(current));
+    }, 30);
+}
+
+function formatNumber(num) {
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + 'M';
+    } else if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
     }
+    return num.toString();
 }
 
-// Update Live Content
-function updateQuickLinks() {
-    const quickLinksBody = document.querySelector('.left-panel .panel-body');
-    quickLinksBody.innerHTML = adminData.links.map(link => `
-        <a href="${link.url}" class="ui-button" target="_blank">
-            <i class="${link.icon}"></i> ${link.title}
-        </a>
-    `).join('');
+function animateProgressBars() {
+    // Trigger animations after a short delay
+    setTimeout(() => {
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 100);
+        });
+    }, 500);
 }
 
-function updateAnnouncements() {
-    const announcementsCard = document.querySelector('.info-panels .info-card');
-    const announcementsHTML = adminData.announcements.slice(0, 3).map(ann => `
-        <div class="announcement-item">
-            <span class="announcement-badge">${ann.badge}</span>
-            <p>${ann.text}</p>
-        </div>
-    `).join('');
+// ======================
+// Video List Loading
+// ======================
+function loadVideoList() {
+    const videoList = document.getElementById('video-list');
+    if (!videoList) return;
     
-    announcementsCard.innerHTML = `
-        <h3><i class="fas fa-bullhorn"></i> ANNOUNCEMENTS</h3>
-        ${announcementsHTML}
-    `;
-}
-
-function updateSchedule() {
-    const scheduleCard = document.querySelectorAll('.info-panels .info-card')[1];
-    const scheduleHTML = adminData.events.map(event => `
-        <div class="schedule-item">
-            <span class="day">${event.day}</span>
-            <span class="time">${event.name}</span>
-        </div>
-    `).join('');
-    
-    scheduleCard.innerHTML = `
-        <h3><i class="fas fa-clock"></i> WEEKLY SCHEDULE</h3>
-        ${scheduleHTML}
-    `;
-}
-
-function showSuccessMessage(message) {
-    const successDiv = document.createElement('div');
-    successDiv.className = 'success-message active';
-    successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-    
-    const form = event.target.closest('form');
-    form.parentNode.insertBefore(successDiv, form);
+    // Simulate loading videos
+    videoList.innerHTML = '<div class="loading-text">Fetching latest videos...</div>';
     
     setTimeout(() => {
-        successDiv.remove();
+        const videos = [
+            { title: 'Epic Gaming Montage #47', date: '2 days ago', url: '#' },
+            { title: 'Live Stream Highlights', date: '5 days ago', url: '#' },
+            { title: 'Community Tournament Finals', date: '1 week ago', url: '#' },
+            { title: 'Behind the Scenes Setup Tour', date: '1 week ago', url: '#' },
+            { title: 'Top 10 Moments of the Month', date: '2 weeks ago', url: '#' }
+        ];
+        
+        videoList.innerHTML = videos.map(video => `
+            <div class="video-item" onclick="window.open('${video.url}', '_blank')">
+                <div class="video-title">${video.title}</div>
+                <div class="video-date">${video.date}</div>
+            </div>
+        `).join('');
+    }, 1000);
+}
+
+// ======================
+// Discord Stats
+// ======================
+function loadDiscordStats() {
+    setTimeout(() => {
+        updateDiscordMembers(10234);
+        updateDiscordOnline(1456);
+    }, 800);
+}
+
+function updateDiscordMembers(count) {
+    const membersElement = document.getElementById('discord-members');
+    if (membersElement) {
+        animateCounter(membersElement, count);
+    }
+}
+
+function updateDiscordOnline(count) {
+    const onlineElement = document.getElementById('discord-online');
+    if (onlineElement) {
+        animateCounter(onlineElement, count);
+    }
+}
+
+// ======================
+// Feature Buttons
+// ======================
+function initializeFeatureButtons() {
+    const featureButtons = document.querySelectorAll('.feature-btn');
+    
+    featureButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const card = this.closest('.feature-card');
+            const title = card.querySelector('h3').textContent;
+            
+            // Add pulse animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+            
+            console.log(`Feature clicked: ${title}`);
+            showNotification(`${title} feature activated!`);
+        });
+    });
+}
+
+// ======================
+// Modal System
+// ======================
+function initializeModals() {
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            closeModal(e.target);
+        }
+    });
+}
+
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('active');
+    }
+}
+
+function closeModal(modal) {
+    if (typeof modal === 'string') {
+        modal = document.getElementById(modal);
+    }
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+// ======================
+// Notifications
+// ======================
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        background: rgba(112, 0, 255, 0.9);
+        border: 2px solid #00fff2;
+        border-radius: 8px;
+        color: #fff;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 0 25px rgba(0, 255, 242, 0.5);
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
     }, 3000);
 }
 
-// Close modals when clicking outside
-window.addEventListener('click', (e) => {
-    if (e.target.classList.contains('modal')) {
-        e.target.classList.remove('active');
+// ======================
+// Glitch Effect
+// ======================
+function triggerGlitch(element) {
+    element.style.animation = 'none';
+    setTimeout(() => {
+        element.style.animation = 'glitch 0.3s ease';
+    }, 10);
+}
+
+// ======================
+// Member List (for Community section)
+// ======================
+function loadMemberList() {
+    const memberList = document.getElementById('member-list');
+    if (!memberList) return;
+    
+    memberList.innerHTML = '<div class="loading-text">Loading members...</div>';
+    
+    setTimeout(() => {
+        const members = [
+            { name: 'ZanityKing', status: 'online', level: 50 },
+            { name: 'ChaosQueen', status: 'online', level: 48 },
+            { name: 'NeonRebel', status: 'idle', level: 45 },
+            { name: 'PixelWarrior', status: 'online', level: 42 },
+            { name: 'CyberDragon', status: 'offline', level: 40 }
+        ];
+        
+        memberList.innerHTML = members.map(member => `
+            <div class="member-item">
+                <div class="member-status ${member.status}"></div>
+                <div class="member-info">
+                    <div class="member-name">${member.name}</div>
+                    <div class="member-level">Level ${member.level}</div>
+                </div>
+            </div>
+        `).join('');
+    }, 1000);
+}
+
+// ======================
+// Admin Panel Functions
+// ======================
+function openAdminLogin() {
+    openModal('admin-login-modal');
+}
+
+function handleAdminLogin(event) {
+    event.preventDefault();
+    
+    const username = document.getElementById('admin-username').value;
+    const password = document.getElementById('admin-password').value;
+    
+    // Simple authentication (replace with actual authentication)
+    if (username === 'admin' && password === 'zanity2026') {
+        isAdminLoggedIn = true;
+        closeModal('admin-login-modal');
+        openModal('admin-panel-modal');
+        loadAdminData();
+        showNotification('Admin access granted!', 'success');
+    } else {
+        showError('Invalid credentials!');
+    }
+}
+
+function loadAdminData() {
+    // Load admin panel data
+    console.log('Loading admin panel data...');
+}
+
+function showError(message) {
+    const errorElement = document.querySelector('.error-message');
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.add('active');
+        
+        setTimeout(() => {
+            errorElement.classList.remove('active');
+        }, 3000);
+    }
+}
+
+// ======================
+// Utility Functions
+// ======================
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Copied to clipboard!');
+    });
+}
+
+// ======================
+// Auto-refresh Stats
+// ======================
+setInterval(() => {
+    if (currentSection === 'home' || currentSection === 'community') {
+        loadDiscordStats();
+    }
+}, 60000); // Refresh every minute
+
+// ======================
+// Keyboard Shortcuts
+// ======================
+document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + K for quick search
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        showNotification('Search feature coming soon!');
+    }
+    
+    // Escape to close modals
+    if (e.key === 'Escape') {
+        const activeModal = document.querySelector('.modal.active');
+        if (activeModal) {
+            closeModal(activeModal);
+        }
     }
 });
 
-// ========================================
-// EXISTING CODE
-// ========================================
+// ======================
+// Console Easter Egg
+// ======================
+console.log('%c⚡ THE REST OF ZANITY ⚡', 'color: #00fff2; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00fff2;');
+console.log('%cNEURAL INTERFACE v2.0 ACTIVE', 'color: #7000ff; font-size: 14px; font-weight: bold;');
+console.log('%cWelcome to the matrix...', 'color: #00fff2; font-style: italic;');
 
-// Create floating particles
-for(let i = 0; i < 50; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.animationDelay = Math.random() * 10 + 's';
-    particle.style.animationDuration = (Math.random() * 5 + 8) + 's';
-    document.body.appendChild(particle);
-}
-
-// Navigation functionality
-const navItems = document.querySelectorAll('.nav-item');
-navItems.forEach(item => {
-    item.addEventListener('click', function() {
-        navItems.forEach(nav => nav.classList.remove('active'));
-        this.classList.add('active');
-        
-        this.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            this.style.transform = '';
-        }, 100);
-    });
-});
-
-// Simulate loading community stats
-setTimeout(() => {
-    const memberCount = Math.floor(Math.random() * 5000) + 10000;
-    const messageCount = Math.floor(Math.random() * 500000) + 1000000;
-    const activeCount = Math.floor(Math.random() * 1000) + 2000;
-    
-    animateValue('member-count', 0, memberCount, 2000);
-    animateValue('message-count', 0, messageCount, 2000);
-    animateValue('active-count', 0, activeCount, 2000);
-    
-    // Animate progress bars
-    document.getElementById('growth-bar').style.width = '88%';
-    document.getElementById('activity-bar').style.width = '94%';
-    document.getElementById('event-bar').style.width = '76%';
-    
-    // Update percentage values
-    setTimeout(() => {
-        document.getElementById('growth-stat').textContent = '+88%';
-        document.getElementById('activity-stat').textContent = '94%';
-        document.getElementById('event-stat').textContent = '76%';
-    }, 1000);
-}, 1000);
-
-// Number animation function
-function animateValue(id, start, end, duration) {
-    const element = document.getElementById(id);
-    const range = end - start;
-    const increment = range / (duration / 16);
-    let current = start;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= end) {
-            current = end;
-            clearInterval(timer);
-        }
-        element.textContent = Math.floor(current).toLocaleString();
-    }, 16);
-}
-
-// Simulate loading active members
-setTimeout(() => {
-    const memberList = document.getElementById('member-list');
-    
-    const members = [
-        { name: 'ZanityKing', status: 'online', activity: 'Playing Fortnite' },
-        { name: 'ChaosQueen', status: 'online', activity: 'In #general-chat' },
-        { name: 'NeonRebel', status: 'online', activity: 'Streaming on Twitch' },
-        { name: 'PixelWarrior', status: 'idle', activity: 'Away' },
-        { name: 'CyberNinja', status: 'online', activity: 'In Voice Chat' },
-        { name: 'GlitchMaster', status: 'online', activity: 'Playing Valorant' },
-        { name: 'VoidWalker', status: 'dnd', activity: 'Do Not Disturb' },
-        { name: 'ShadowReaper', status: 'online', activity: 'In #gaming' },
-        { name: 'PhantomAce', status: 'online', activity: 'Watching Stream' },
-        { name: 'StormBringer', status: 'idle', activity: 'Idle' }
-    ];
-    
-    let memberHTML = '';
-    members.forEach(member => {
+// ======================
+// Export functions for global use
+// ======================
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.showNotification = showNotification;
+window.openAdminLogin = openAdminLogin;
+window.handleAdminLogin = handleAdminLogin;{
         const statusClass = member.status === 'online' ? 'status-online' : 
                           member.status === 'idle' ? 'status-idle' : 'status-dnd';
         const statusIcon = member.status === 'online' ? 'circle' : 
