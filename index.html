@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Rest of Zanity // NEURAL INTERFACE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="cyber-grid"></div>
+    <div class="scan-line"></div>
+
+    <div class="ui-frame">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav">
+            <div class="nav-item active" data-section="home">
+                <i class="fas fa-home"></i>
+                <span>HOME</span>
+            </div>
+            <div class="nav-item" data-section="content">
+                <i class="fas fa-video"></i>
+                <span>CONTENT</span>
+            </div>
+            <div class="nav-item" data-section="community">
+                <i class="fas fa-users"></i>
+                <span>COMMUNITY</span>
+            </div>
+            <div class="nav-item" data-section="about">
+                <i class="fas fa-info-circle"></i>
+                <span>ABOUT</span>
+            </div>
+            <div class="nav-item" data-section="shop">
+                <i class="fas fa-shopping-cart"></i>
+                <span>SHOP</span>
+            </div>
+        </nav>
+
+        <!-- Main Header -->
+        <header class="ui-header">
+            <div class="logo">
+                <i class="fas fa-microchip"></i> The Rest of Zanity_UI // V2.0
+            </div>
+            <div class="header-center">
+                <div class="system-status">
+                    <span class="status-label">SYSTEM STATUS:</span>
+                    <span class="status-value">OPERATIONAL</span>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <i class="fas fa-users"></i>
+                    <div>
+                        <span class="stat-label">SUBS</span>
+                        <span class="stat-value" id="sub-header">0</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-eye"></i>
+                    <div>
+                        <span class="stat-label">VIEWS</span>
+                        <span class="stat-value" id="view-count">0</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-signal"></i>
+                    <div>
+                        <span class="stat-label">PING</span>
+                        <span class="stat-value">27ms</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <div class="dashboard-wrapper">
+            <!-- Left Sidebar -->
+            <aside class="panel side-panel left-panel">
+                <!-- Quick Links -->
+                <div class="panel-header">
+                    <i class="fas fa-bolt"></i> QUICK ACCESS
+                </div>
+                <div class="panel-body">
+                    <a href="https://youtube.com/@therestofzanity" target="_blank" class="ui-button">
+                        <i class="fab fa-youtube"></i> YouTube Channel
+                    </a>
+                    <a href="https://www.tiktok.com/@therestofzanity" target="_blank" class="ui-button">
+                        <i class="fab fa-tiktok"></i> TikTok Hub
+                    </a>
+                    <a href="https://discord.gg/therestofzanity" target="_blank" class="ui-button">
+                        <i class="fab fa-discord"></i> Discord Server
+                    </a>
+                    <a href="https://twitter.com/therestofzanity" target="_blank" class="ui-button">
+                        <i class="fab fa-twitter"></i> Twitter/X
+                    </a>
+                    <a href="https://twitch.tv/therestofzanity" target="_blank" class="ui-button">
+                        <i class="fab fa-twitch"></i> Twitch
+                    </a>
+                    <a href="https://instagram.com/therestofzanity" target="_blank" class="ui-button">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                </div>
+
+                <!-- Live Stats -->
+                <div class="panel-header mt">
+                    <i class="fas fa-chart-line"></i> LIVE ANALYTICS
+                </div>
+                <div class="panel-body">
+                    <div class="stat-row">
+                        <p class="stat-label">SUBSCRIBERS</p>
+                        <div class="progress-container">
+                            <div class="progress-fill" id="sub-bar" style="width: 0%;"></div>
+                        </div>
+                        <p class="stat-value" id="sub-count">0</p>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <p class="stat-label">ENGAGEMENT RATE</p>
+                        <div class="progress-container">
+                            <div class="progress-fill" id="engage-bar" style="width: 0%;"></div>
+                        </div>
+                        <p class="stat-value" id="engage-count">0%</p>
+                    </div>
+
+                    <div class="stat-row">
+                        <p class="stat-label">GROWTH</p>
+                        <div class="progress-container">
+                            <div class="progress-fill" id="growth-bar" style="width: 0%;"></div>
+                        </div>
+                        <p class="stat-value" id="growth-count">+0%</p>
+                    </div>
+                </div>
+
+                <!-- Server Status -->
+                <div class="panel-header mt">
+                    <i class="fas fa-server"></i> SERVER STATUS
+                </div>
+                <div class="panel-body">
+                    <div class="server-info">
+                        <div class="server-row">
+                            <span>Discord Server</span>
+                            <span class="status-online"><i class="fas fa-circle"></i> ONLINE</span>
+                        </div>
+                        <div class="server-row">
+                            <span>API Status</span>
+                            <span class="status-online"><i class="fas fa-circle"></i> ACTIVE</span>
+                        </div>
+                        <div class="server-row">
+                            <span>Stream Status</span>
+                            <span class="status-offline"><i class="fas fa-circle"></i> OFFLINE</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Panel -->
+            <main class="panel center-panel">
+                <!-- Profile Section -->
+                <div class="profile-section">
+                    <div class="target-corners">
+                        <div class="profile-hex">
+                            <img src="https://via.placeholder.com/150" alt="Avatar">
+                        </div>
+                    </div>
+                    <h1 class="glitch-text">The Rest of Zanity</h1>
+                    <p class="profile-tagline">CONTENT CREATOR // GAMER // STREAMER</p>
+                    <div class="status-indicator">
+                        <span class="pulse-dot"></span> NEURAL INTERFACE ACTIVE
+                    </div>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <h3>LATEST VIDEO</h3>
+                        <p>Epic Gaming Montage #47</p>
+                        <button class="feature-btn">WATCH NOW</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3>NEXT STREAM</h3>
+                        <p>Live Gaming Session</p>
+                        <button class="feature-btn">SET REMINDER</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>TOURNAMENTS</h3>
+                        <p>Join Community Events</p>
+                        <button class="feature-btn">REGISTER</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <h3>MERCH STORE</h3>
+                        <p>Exclusive Gear Available</p>
+                        <button class="feature-btn">SHOP NOW</button>
+                    </div>
+                </div>
+
+                <!-- Info Panels -->
+                <div class="info-panels">
+                    <div class="info-card">
+                        <h3><i class="fas fa-bell"></i> ANNOUNCEMENTS</h3>
+                        <div class="announcement-item">
+                            <span class="announcement-badge">NEW</span>
+                            <p>New video series launching next week!</p>
+                        </div>
+                        <div class="announcement-item">
+                            <span class="announcement-badge">UPDATE</span>
+                            <p>Discord server now has 10K+ members!</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3><i class="fas fa-clock"></i> STREAM SCHEDULE</h3>
+                        <div class="schedule-item">
+                            <span class="day">MON</span>
+                            <span class="time">8:00 PM EST</span>
+                        </div>
+                        <div class="schedule-item">
+                            <span class="day">WED</span>
+                            <span class="time">8:00 PM EST</span>
+                        </div>
+                        <div class="schedule-item">
+                            <span class="day">FRI</span>
+                            <span class="time">9:00 PM EST</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="panel side-panel right-panel">
+                <!-- Recent Uploads -->
+                <div class="panel-header">
+                    <i class="fas fa-video"></i> RECENT UPLOADS
+                </div>
+                <div class="panel-body scrollable" id="video-list">
+                    <div class="loading-text">Fetching data...</div>
+                </div>
+
+                <!-- Top Supporters -->
+                <div class="panel-header mt">
+                    <i class="fas fa-star"></i> TOP SUPPORTERS
+                </div>
+                <div class="panel-body">
+                    <div class="supporter-item">
+                        <div class="supporter-rank">#1</div>
+                        <div class="supporter-info">
+                            <div class="supporter-name">CyberWarrior</div>
+                            <div class="supporter-points">15,420 pts</div>
+                        </div>
+                    </div>
+                    <div class="supporter-item">
+                        <div class="supporter-rank">#2</div>
+                        <div class="supporter-info">
+                            <div class="supporter-name">NeonDreamer</div>
+                            <div class="supporter-points">12,890 pts</div>
+                        </div>
+                    </div>
+                    <div class="supporter-item">
+                        <div class="supporter-rank">#3</div>
+                        <div class="supporter-info">
+                            <div class="supporter-name">PixelMaster</div>
+                            <div class="supporter-points">10,560 pts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discord Widget -->
+                <div class="panel-header mt">
+                    <i class="fab fa-discord"></i> DISCORD ACTIVITY
+                </div>
+                <div class="panel-body">
+                    <div class="discord-stats">
+                        <div class="discord-stat">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <span class="discord-label">Members</span>
+                                <span class="discord-value" id="discord-members">10,234</span>
+                            </div>
+                        </div>
+                        <div class="discord-stat">
+                            <i class="fas fa-circle"></i>
+                            <div>
+                                <span class="discord-label">Online</span>
+                                <span class="discord-value" id="discord-online">1,456</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://discord.gg/therestofzanity" target="_blank" class="ui-button discord-join-btn">
+                        <i class="fab fa-discord"></i> JOIN DISCORD
+                    </a>
+                </div>
+
+                <!-- Social Feed -->
+                <div class="panel-header mt">
+                    <i class="fas fa-rss"></i> SOCIAL FEED
+                </div>
+                <div class="panel-body scrollable">
+                    <div class="feed-item">
+                        <div class="feed-platform twitter">
+                            <i class="fab fa-twitter"></i>
+                        </div>
+                        <p>"Just dropped a new video! Check it out!"</p>
+                        <span class="feed-time">2h ago</span>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-platform instagram">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <p>"Behind the scenes of today's stream setup"</p>
+                        <span class="feed-time">5h ago</span>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-platform youtube">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <p>"New video uploaded: Epic Moments Compilation"</p>
+                        <span class="feed-time">1d ago</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Call to Action Banner -->
+        <div class="cta-banner">
+            <div class="cta-content">
+                <h2>JOIN THE COMMUNITY</h2>
+                <p>Connect with thousands of members and stay updated with exclusive content</p>
+            </div>
+            <div class="cta-buttons">
+                <a href="https://discord.gg/therestofzanity" target="_blank" class="cta-btn primary">
+                    <i class="fab fa-discord"></i> JOIN DISCORD
+                </a>
+                <a href="https://youtube.com/@therestofzanity" target="_blank" class="cta-btn secondary">
+                    <i class="fab fa-youtube"></i> SUBSCRIBE
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="ui-footer">
+            <div class="footer-section">
+                <span><i class="fas fa-shield-alt"></i> SYSTEM STATUS: SECURE</span>
+            </div>
+            <div class="footer-section">
+                <span>© 2026 The Rest of Zanity. ALL RIGHTS RESERVED.</span>
+            </div>
+            <div class="footer-section">
+                <span>NEURAL INTERFACE v2.0.1</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>                      <div class="announcement-item">
+                            <span class="announcement-badge">EVENT</span>
+                            <p>Monthly tournament sign-ups open now!</p>
+                        </div>
+                        <div class="announcement-item">
+                            <span class="announcement-badge">UPDATE</span>
+                            <p>Community milestone: 10K members reached! 🎉</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3><i class="fas fa-clock"></i> WEEKLY SCHEDULE</h3>
+                        <div class="schedule-item">
+                            <span class="day">MON</span>
+                            <span class="time">Movie Night 9PM</span>
+                        </div>
+                        <div class="schedule-item">
+                            <span class="day">WED</span>
+                            <span class="time">Trivia 8PM</span>
+                        </div>
+                        <div class="schedule-item">
+                            <span class="day">FRI</span>
+                            <span class="time">Game Night 8PM</span>
+                        </div>
+                        <div class="schedule-item">
+                            <span class="day">SAT</span>
+                            <span class="time">Tournament 7PM</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="panel side-panel right-panel">
+                <!-- Active Members -->
+                <div class="panel-header">
+                    <i class="fas fa-user-friends"></i> ACTIVE MEMBERS
+                </div>
+                <div class="panel-body scrollable" id="member-list">
+                    <div class="loading-text">Loading members...</div>
+                </div>
+
+                <!-- Top Contributors -->
+                <div class="panel-header mt">
+                    <i class="fas fa-medal"></i> TOP CONTRIBUTORS
+                </div>
+                <div class="panel-body">
+                    <div class="supporter-item">
+                        <div class="supporter-rank">#1</div>
+                        <div class="supporter-info">
+                            <div class="supporter-name">ZanityKing</div>
+                            <div class="supporter-points">25,840 pts</div>
+                        </div>
+                    </div>
+                    <div class="supporter-item">
+                        <div class="supporter-rank">#2</div>
+                        <div class="supporter-info">
+                            <div class="supporter-name">ChaosQueen</div>
+                            <div class="supporter-points">22,130 pts</div>
+                        </div>
+                    </div>
+                    <div class="supporter-item">
+                        <div class="supporter-rank">#3</div>
+                        <div class="supporter-info">
+                            <div class="supporter-name">NeonRebel</div>
+                            <div class="supporter-points">19,560 pts</div>
+                        </div>
+                    </div>
+                    <div class="supporter-item">
+                        <div class="supporter-rank">#4</div>
+                        <div class="supporter-info">
+                            <div class="supporter-name">PixelWarrior</div>
+                            <div class="supporter-points">17,890 pts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discord Widget -->
+                <div class="panel-header mt">
+                    <i class="fab fa-discord"></i> DISCORD STATS
+                </div>
+                <div class="panel-body">
+                    <div class="discord-stats">
+                        <div class="discord-stat">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <span class="discord-label">Total Members</span>
+                                <span class="discord-value" id="discord-members">0</span>
+                            </div>
+                        </div>
+                        <div class="discord-stat">
+                            <i class="fas fa-circle"></i>
+                            <div>
+                                <span class="discord-label">Online Now</span>
+                                <span class="discord-value" id="discord-online">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" target="_blank" class="ui-button discord-join-btn">
+                        <i class="fab fa-discord"></i> JOIN DISCORD
+                    </a>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="panel-header mt">
+                    <i class="fas fa-stream"></i> RECENT ACTIVITY
+                </div>
+                <div class="panel-body scrollable">
+                    <div class="feed-item">
+                        <div class="feed-platform discord">
+                            <i class="fab fa-discord"></i>
+                        </div>
+                        <p><strong>ZanityKing</strong> won the weekly tournament!</p>
+                        <span class="feed-time">15m ago</span>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-platform event">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <p>Movie Night event started in #voice-lounge</p>
+                        <span class="feed-time">1h ago</span>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-platform achievement">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <p><strong>ChaosQueen</strong> unlocked "Legend" rank!</p>
+                        <span class="feed-time">3h ago</span>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-platform discord">
+                            <i class="fab fa-discord"></i>
+                        </div>
+                        <p>50+ members joined today! Welcome! 🎉</p>
+                        <span class="feed-time">5h ago</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Call to Action Banner -->
+        <div class="cta-banner">
+            <div class="cta-content">
+                <h2>JOIN THE REST OF ZANITY</h2>
+                <p>Connect with thousands of members in our thriving community. Gaming, events, and pure chaos await!</p>
+            </div>
+            <div class="cta-buttons">
+                <a href="#" target="_blank" class="cta-btn primary">
+                    <i class="fab fa-discord"></i> JOIN DISCORD
+                </a>
+                <a href="#" target="_blank" class="cta-btn secondary">
+                    <i class="fas fa-info-circle"></i> LEARN MORE
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="ui-footer">
+            <div class="footer-section">
+                <span><i class="fas fa-shield-alt"></i> COMMUNITY STATUS: SECURE</span>
+            </div>
+            <div class="footer-section">
+                <span>© 2026 THE REST OF ZANITY. ALL RIGHTS RESERVED.</span>
+            </div>
+            <div class="footer-section">
+                <span>TROZ INTERFACE v1.0</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
