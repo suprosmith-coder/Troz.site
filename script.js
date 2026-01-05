@@ -1,107 +1,85 @@
-// script.js - The Rest of Zanity Website
+// CONFIGURATION - Add your links here
+const SOCIAL_DATA = {
+    youtube: [
+        { name: "GAUGE GAMING", link: "#", icon: "fa-youtube" },
+        { name: "XIRIUZ750", link: "#", icon: "fa-youtube" }
+    ],
+    tiktok: [
+        { name: "ZANITY CLIPS", link: "#", icon: "fa-tiktok" }
+    ],
+    twitch: [
+        { name: "LIVE STREAM", link: "#", icon: "fa-twitch" },
+        { name: "X NEWS", link: "#", icon: "fa-x-twitter" }
+    ],
+    insta: [
+        { name: "GALLERY", link: "#", icon: "fa-instagram" }
+    ]
+};
 
-// ======================
-// Global Variables
-// ======================
-let currentSection = 'home';
-let isAdminLoggedIn = false;
-
-// ======================
-// Initialize on DOM Load
-// ======================
-document.addEventListener('DOMContentLoaded', function() {
-    initializeNavigation();
-    initializeStats();
-    initializeModals();
-    loadVideoList();
-    loadDiscordStats();
-    animateProgressBars();
-    initializeFeatureButtons();
-});
-
-// ======================
-// Navigation System
-// ======================
-function initializeNavigation() {
-    const navItems = document.querySelectorAll('.nav-item');
+function showHub(hubId) {
+    // Hide all views
+    document.querySelectorAll('.hub-view').forEach(v => v.classList.remove('active'));
     
-    navItems.forEach(item => {
-        item.addEventListener('click', function() {
-            // Remove active class from all items
-            navItems.forEach(nav => nav.classList.remove('active'));
-            
-            // Add active class to clicked item
-            this.classList.add('active');
-            
-            // Get section name
-            const section = this.getAttribute('data-section');
-            currentSection = section;
-            
-            // Handle section changes
-            handleSectionChange(section);
-        });
-    });
-}
-
-function handleSectionChange(section) {
-    console.log(`Navigating to: ${section}`);
+    // Show target view
+    const target = document.getElementById('view-' + hubId);
+    target.classList.add('active');
     
-    // You can add custom logic for each section here
-    switch(section) {
-        case 'home':
-            // Home section logic
-            break;
-        case 'content':
-            // Content section logic
-            loadVideoList();
-            break;
-        case 'community':
-            // Community section logic
-            loadDiscordStats();
-            break;
-        case 'about':
-            // About section logic
-            break;
-        case 'shop':
-            // Shop section logic
-            break;
+    // Update header status
+    document.getElementById('current-view-name').textContent = hubId.toUpperCase();
+
+    // Populate the grid if it's a social hub
+    if (SOCIAL_DATA[hubId]) {
+        renderGrid(hubId);
     }
 }
 
-// ======================
-// Stats & Analytics
-// ======================
-function initializeStats() {
-    // Simulate loading stats
-    setTimeout(() => {
-        updateSubscriberCount(12345);
-        updateViewCount(1234567);
-        updateEngagementRate(8.5);
-        updateGrowthRate(12.3);
-    }, 500);
+function renderGrid(hubId) {
+    const grid = document.getElementById(hubId.substring(0,2) + '-grid');
+    if (!grid) return;
+
+    grid.innerHTML = SOCIAL_DATA[hubId].map(item => `
+        <div class="hub-card">
+            <i class="fab ${item.icon}" style="font-size: 2rem; color: var(--cyan-trim)"></i>
+            <h3>${item.name}</h3>
+            <a href="${item.link}" target="_blank" class="nav-btn" style="display:block; text-align:center; margin-top:10px">ACCESS LINK</a>
+        </div>
+    `).join('');
 }
 
-function updateSubscriberCount(count) {
-    const subHeader = document.getElementById('sub-header');
-    const subCount = document.getElementById('sub-count');
-    const subBar = document.getElementById('sub-bar');
-    
-    if (subHeader) animateCounter(subHeader, count);
-    if (subCount) animateCounter(subCount, count);
-    if (subBar) {
-        // Animate progress bar (example: 60% of 20k goal)
-        const percentage = (count / 20000) * 100;
-        subBar.style.width = Math.min(percentage, 100) + '%';
+// Set default view on load
+document.addEventListener('DOMContentLoaded', () => showHub('main'));
+           <h3>${ch.name}</h3>
+                    <p>${parseInt(stats.subscriberCount).toLocaleString()} SUBS</p>
+                    <a href="https://youtube.com/channel/${ch.id}" target="_blank" class="visit-btn">VIEW DATASTREAM</a>
+                </div>
+            `;
+        } catch (err) { console.error("API Error", err); }
     }
+    grid.innerHTML = html;
 }
 
-function updateViewCount(count) {
-    const viewCount = document.getElementById('view-count');
-    if (viewCount) animateCounter(viewCount, count);
+// 4. AUTO-LOAD LATEST VIDEO ON DASHBOARD
+async function loadLatestVideo() {
+    const container = document.getElementById('latest-video-container');
+    try {
+        const resp = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNELS[0].id}&part=snippet,id&order=date&maxResults=1`);
+        const data = await resp.json();
+        const video = data.items[0];
+
+        container.innerHTML = `
+            <div class="video-card">
+                <span class="tag">LATEST_TRANSMISSION</span>
+                <img src="${video.snippet.thumbnails.high.url}" style="width:100%">
+                <h4>${video.snippet.title}</h4>
+                <a href="https://youtu.be/${video.id.videoId}" target="_blank" class="toggle-link">WATCH_NOW</a>
+            </div>
+        `;
+    } catch (e) { container.innerHTML = "OFFLINE"; }
 }
 
-function updateEngagementRate(rate) {
-    const engageCount = document.getElementById('engage-count');
+// Initial Load
+document.addEventListener('DOMContentLoaded', loadLatestVideo);
+('engage-count');
     const engageBar = document.getElementById('engage-bar');
     
     if (engageCount) engageCount.textContent = rate.toFixed(1) + '%';
